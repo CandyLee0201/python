@@ -23,11 +23,16 @@ from collections import defaultdict
 actions = ['Up', 'Left', 'Down', 'Right' ,'Restart', 'Exit']
 
 # 有效键的定义WASDRQ，以及小写的wasdrq
+
 letter_codes = [ord(ch) for ch in 'WASDRQwasdrq']
+# letter_codes = ['W', 'A', 'S', 'D', 'R', 'Q', 'w', 'a', 's', 'd', 'r', 'q']
 
 # 将用户行为与键的输入进行关联
+# 为什么要是字典？
 actions_dict = dict(zip(letter_codes, actions * 2))
 
+'''actions_list = zip(letter_codes, actions * 2)
+actions_dict = dict(actions_list)'''
 
 # 获取用户有效输入
 def get_user_action(keyboard):
@@ -60,6 +65,7 @@ class GameField(object):
         if self.score > self.highscore:
             self.highscore = self.score
         self.score = 0
+        # ？？
         self.field = [[0 for i in range(self.width)] for j in range(self.height)]
         self.spawn()
         self.spawn()
@@ -128,6 +134,7 @@ class GameField(object):
         # 绘制水平分割线
         def draw_hor_separator():
             line = '+' + ('+------' * self.width + '+')[1:]
+            # lambda匿名函数参数为空，展示line字符串的内容
             separator = defaultdict(lambda : line)
             if not hasattr(draw_hor_separator, 'counter'):
                 draw_hor_separator.counter = 0
@@ -157,7 +164,16 @@ class GameField(object):
     # 棋盘操作
     def spawn(self):
         new_element = 4 if randrange(100) > 89 else 2
+        '''if randrange(100) > 89:
+            new_element = 4
+        else:
+            new_element = 2'''
+
         (i, j) = choice([(i, j) for i in range(self.width) for j in range(self.height) if self.field[i][j] == 0])
+        # i = choice(range(self.width))
+        # j = choice(range(self.height))
+
+
         self.field[i][j] = new_element
 
     # 判断能否移动
@@ -200,7 +216,7 @@ def main(stdscr):
         game_field.draw(stdscr)
         # 读取用户输入得到 action ，判断是重启游戏还是结束游戏
         action = get_user_action(stdscr)
-        responses = defaultdict(lambda :state) # 默认是当前状态，没有行为会一直在当前界面循环
+        responses = defaultdict(lambda : state) # 默认是当前状态，没有行为会一直在当前界面循环
         responses['Restart'], responses['Exit'] = 'Init', 'Exit' # 对应不同的行为转换到不同的状态
         return responses[action]
 
@@ -229,7 +245,7 @@ def main(stdscr):
     }
 
     curses.use_default_colors()
-    game_field = GameField(win=32)
+    game_field = GameField(win=2048)
 
     state = 'Init'
 
