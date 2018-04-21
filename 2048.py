@@ -65,12 +65,11 @@ class GameField(object):
         if self.score > self.highscore:
             self.highscore = self.score
         self.score = 0
-        # ？？
         self.field = [[0 for i in range(self.width)] for j in range(self.height)]
         self.spawn()
         self.spawn()
 
-    # 通过对矩阵进行转置和逆转，可以直接从座椅得到其他三个方向的移动操作
+    # 通过对矩阵进行转置和逆转，可以直接从左移得到其他三个方向的移动操作
     def move(self, direction):
         def move_row_left(row):
             def tighten(row):  # 把零散的非零单元挤到一起
